@@ -117,18 +117,19 @@ final class AuthManager {
         }
     }
     
-    public func refreshIfNeeded(completion: @escaping (Bool) -> Void) {
+    public func refreshIfNeeded(completion: ((Bool) -> Void)?) {
         guard !refreshingToken else {
             return
         }
         
         guard shouldRefreshToken else {
-            completion(true)
+            completion?(true)
             return
         }
        
         guard let refreshToken = self.refreshToken else {
             print("Refresh token is nil")
+            completion?(false)
             return
         }
         
@@ -150,7 +151,7 @@ final class AuthManager {
         let basicToken = Constans.clientID+":"+Constans.clientSeccret
         let data = basicToken.data(using: .utf8)
         guard let base64String = data?.base64EncodedString() else {
-            completion(false)
+            completion?(false)
             return
         }
         request.setValue("Basic \(base64String)", forHTTPHeaderField: "Authorization")
@@ -158,7 +159,7 @@ final class AuthManager {
         URLSession.shared.dataTask(with: request) { data, _, error in
             self.refreshingToken = false
             guard let data = data, error == nil else {
-                completion(false)
+                completion?(false)
                 return
             }
             
@@ -168,19 +169,18 @@ final class AuthManager {
                 self.onRefreshBlocks.forEach {  $0(result.access_token)}
                 self.onRefreshBlocks.removeAll()
                 self.cacheToken(result: result)
-                completion(true)
+                completion?(true)
             }
             catch {
                 print(error.localizedDescription)
-                completion(false)
+                completion?(false)
             }
         }.resume()
     }
     
     public func cacheToken(result: AuthResponse) {
         UserDefaults.standard.setValue(result.access_token, forKey: "access_token")
-        if let refresh_token = refreshToken {
-            print("Save refresh")
+        if let refresh_token = result.refresh_token {
             UserDefaults.standard.setValue(refresh_token, forKey: "refresh_token")
         }
         UserDefaults.standard.setValue(Date().addingTimeInterval(TimeInterval(result.expires_in)), forKey: "expiration")
