@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C25B2630286ECC990056AE1A /* AuthResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C25B262F286ECC990056AE1A /* AuthResponse.swift */; };
+		C25C8C5F2872BD8100F22500 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C25C8C5E2872BD8100F22500 /* SettingsModel.swift */; };
 		C2E12A4E286D7FD900314C7B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E12A4D286D7FD900314C7B /* AppDelegate.swift */; };
 		C2E12A50286D7FD900314C7B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E12A4F286D7FD900314C7B /* SceneDelegate.swift */; };
 		C2E12A52286D7FD900314C7B /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E12A51286D7FD900314C7B /* HomeViewController.swift */; };
@@ -35,6 +36,7 @@
 
 /* Begin PBXFileReference section */
 		C25B262F286ECC990056AE1A /* AuthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthResponse.swift; sourceTree = "<group>"; };
+		C25C8C5E2872BD8100F22500 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		C2E12A4A286D7FD900314C7B /* Spotify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spotify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2E12A4D286D7FD900314C7B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C2E12A4F286D7FD900314C7B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				C2E12A87286D879500314C7B /* Artist.swift */,
 				C2E12A89286D879D00314C7B /* UserProfile.swift */,
 				C25B262F286ECC990056AE1A /* AuthResponse.swift */,
+				C25C8C5E2872BD8100F22500 /* SettingsModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 				C2E12A86286D878A00314C7B /* AudioTrack.swift in Sources */,
 				C2E12A68286D860C00314C7B /* TabBarViewController.swift in Sources */,
 				C2E12A52286D7FD900314C7B /* HomeViewController.swift in Sources */,
+				C25C8C5F2872BD8100F22500 /* SettingsModel.swift in Sources */,
 				C2E12A70286D86B900314C7B /* AuthViewController.swift in Sources */,
 				C2E12A8A286D879D00314C7B /* UserProfile.swift in Sources */,
 				C2E12A4E286D7FD900314C7B /* AppDelegate.swift in Sources */,
