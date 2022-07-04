@@ -41,6 +41,87 @@ final class ApiCaller {
         }
     }
     
+    public func getNewRelises(comletion: @escaping(Result<NewRelisesResponse, Error>) -> Void) {
+        createRequest(with: URL(string: Constans.baseAPIURL + "/browse/new-releases?limit=1"), type: .GET) { request in
+            URLSession.shared.dataTask(with: request) { data, _, error in
+                guard let data = data, error == nil else {
+                    comletion(.failure(APIError.failedToGetData))
+                    return
+                }
+                
+                do{
+//                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                    let result = try JSONDecoder().decode(NewRelisesResponse.self, from: data)
+//                    print(json)
+                    comletion(.success(result))
+                } catch {
+                    comletion(.failure(error))
+                }
+            }.resume()
+        }
+    }
+    
+    public func getFeaturedPlaylists(completion: @escaping(Result<FeaturedPlaylistsResponse, Error>) ->  Void) {
+        createRequest(with: URL(string: Constans.baseAPIURL + "/browse/featured-playlists"), type: .GET) { request in
+            URLSession.shared.dataTask(with: request) { data, _, error in
+                guard let data = data, error == nil else {
+                    completion(.failure(APIError.failedToGetData))
+                    return
+                }
+                
+                do {
+//                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                    let result = try JSONDecoder().decode(FeaturedPlaylistsResponse.self, from: data)
+                    completion(.success(result))
+                } catch {
+                    print(error.localizedDescription)
+                    completion(.failure(error))
+                }
+            }.resume()
+        }
+    }
+    
+    public func getRecomendations(genres: Set<String>, completion: @escaping(Result<RecommendationsResponse, Error>) -> Void) {
+        let seeds = genres.joined(separator: ",")
+        createRequest(with: URL(string: Constans.baseAPIURL + "/recommendations?limit=2&seed_genres=\(seeds)"), type: .GET, completion: { request in
+            URLSession.shared.dataTask(with: request) { data, _, error in
+                guard let data = data, error == nil else {
+                    completion(.failure(APIError.failedToGetData))
+                    return
+                }
+                
+                do {
+//                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                    let result = try JSONDecoder().decode(RecommendationsResponse.self, from: data)
+                    completion(.success(result))
+                } catch {
+                    print(error.localizedDescription)
+                    completion(.failure(error))
+                }
+            }.resume()
+        })
+    }
+    
+    public func getRecomendedGenres(completion: @escaping(Result<RecommendedGenresResponse, Error>) -> Void) {
+        createRequest(with: URL(string: Constans.baseAPIURL + "/recommendations/available-genre-seeds"), type: .GET) { request in
+            URLSession.shared.dataTask(with: request) { data, _, error in
+                guard let data = data, error == nil else {
+                    completion(.failure(APIError.failedToGetData))
+                    return
+                }
+                
+                do{
+//                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                    let result = try JSONDecoder().decode(RecommendedGenresResponse.self, from: data)
+                    completion(.success(result))
+                } catch {
+                    print(error.localizedDescription)
+                    completion(.failure(error))
+                }
+            }.resume()
+        }
+    }
+    
     // MARK - private
     
     enum HTTPMethod: String {
