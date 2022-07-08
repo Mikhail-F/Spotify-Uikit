@@ -41,7 +41,7 @@ final class ApiCaller {
         }
     }
     
-    public func getNewRelises(comletion: @escaping(Result<NewRelisesResponse, Error>) -> Void) {
+    public func getNewReleases(comletion: @escaping(Result<NewRelisesResponse, Error>) -> Void) {
         createRequest(with: URL(string: Constans.baseAPIURL + "/browse/new-releases?limit=1"), type: .GET) { request in
             URLSession.shared.dataTask(with: request) { data, _, error in
                 guard let data = data, error == nil else {
@@ -71,6 +71,7 @@ final class ApiCaller {
                 
                 do {
 //                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+//                    print(json)
                     let result = try JSONDecoder().decode(FeaturedPlaylistsResponse.self, from: data)
                     completion(.success(result))
                 } catch {
