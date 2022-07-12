@@ -116,7 +116,6 @@ class HomeViewController: UIViewController {
                         print(errorRecommended.localizedDescription)
                     }
                 }
-                self.updateUI()
             case .failure(let error):
                 print(error.localizedDescription)
                 self.errorFetchData()
@@ -147,27 +146,23 @@ class HomeViewController: UIViewController {
                 )
             }))
             sections.append(.featuredPlaylists(viewModels:
-                playlists.compactMap{
-                    return FeaturedPlaylistCellViewModel(
-                        name: $0.name,
-                        artworkURL: URL(string: $0.images.first?.url ?? ""),
-                        creatorName: $0.owner.display_name
-                    )}))
+                                                playlists.compactMap{
+                return FeaturedPlaylistCellViewModel(
+                    name: $0.name,
+                    artworkURL: URL(string: $0.images.first?.url ?? ""),
+                    creatorName: $0.owner.display_name
+                )}))
             sections.append(.recommendedTracks(viewModels:
-                tracks.compactMap{
-                    return RecommendedTrackCellViewModel(
-                        name: $0.name,
-                        artworkURL: URL(string: $0.album.images.first?.url ?? ""),
-                        artistrName: $0.artists.first?.name ?? "-"
-                    )
-                }
-            ))
+                                                tracks.compactMap{
+                return RecommendedTrackCellViewModel(
+                    name: $0.name,
+                    artworkURL: URL(string: $0.album.images.first?.url ?? ""),
+                    artistrName: $0.artists.first?.name ?? "-"
+                )
+            }
+                                              ))
             collectionView.reloadData()
         }
-    
-    private func updateUI() {
-        
-    }
     
     private func errorFetchData() {
         let label = UILabel()
@@ -206,23 +201,23 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let type = sections[indexPath.section]
         switch type {
         case .newReleases(let viewModels):
-           guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewReleaseCollectionViewCell.identifier, for: indexPath) as? NewReleaseCollectionViewCell else {
-               return UICollectionViewCell()
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NewReleaseCollectionViewCell.identifier, for: indexPath) as? NewReleaseCollectionViewCell else {
+                return UICollectionViewCell()
             }
             let model = viewModels[indexPath.row]
             cell.configure(viewModel: model)
             return cell
         case .featuredPlaylists(let viewModels):
-          guard  let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeaturedPlaylistCollectionViewCell.identifier, for: indexPath) as? FeaturedPlaylistCollectionViewCell else {
-              return UICollectionViewCell()
-           }
+            guard  let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeaturedPlaylistCollectionViewCell.identifier, for: indexPath) as? FeaturedPlaylistCollectionViewCell else {
+                return UICollectionViewCell()
+            }
             let model = viewModels[indexPath.row]
             cell.configure(viewModel: model)
             return cell
         case .recommendedTracks(let viewModels):
-           guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendedTrackCollectionViewCell.identifier, for: indexPath) as? RecommendedTrackCollectionViewCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendedTrackCollectionViewCell.identifier, for: indexPath) as? RecommendedTrackCollectionViewCell else {
                 return UICollectionViewCell()
-             }
+            }
             let model = viewModels[indexPath.row]
             cell.configure(viewModel: model)
             return cell
@@ -230,7 +225,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func createSectionLayout(section: Int) -> NSCollectionLayoutSection{
-        print(section)
         switch section {
         case 0:
             //Item
