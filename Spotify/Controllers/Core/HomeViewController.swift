@@ -15,6 +15,10 @@ enum BrowseSectionType {
 
 class HomeViewController: UIViewController {
     
+    private var newAlbums: [Album] = []
+    private var playlists: [Playlist] = []
+    private var tracks: [AudioTrack] = []
+    
     lazy var spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView()
         spinner.tintColor = .label
@@ -26,7 +30,7 @@ class HomeViewController: UIViewController {
     
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewCompositionalLayout{sectionIndex, _ -> NSCollectionLayoutSection? in
-            self.createSectionLayout(section: sectionIndex)
+            self.createSectionLayout(section: sectionIndex);
         }
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return cv
@@ -137,6 +141,10 @@ class HomeViewController: UIViewController {
         newAlbums: [Album],
         playlists: [Playlist],
         tracks: [AudioTrack]) {
+            self.newAlbums = newAlbums
+            self.playlists = playlists
+            self.tracks = tracks
+            
             sections.append(.newReleases(viewModels: newAlbums.compactMap{
                 return NewReleasesCellViewModel(
                     name: $0.name,
@@ -156,7 +164,7 @@ class HomeViewController: UIViewController {
                                                 tracks.compactMap{
                 return RecommendedTrackCellViewModel(
                     name: $0.name,
-                    artworkURL: URL(string: $0.album.images.first?.url ?? ""),
+                    artworkURL: URL(string: $0.album?.images.first?.url ?? ""),
                     artistrName: $0.artists.first?.name ?? "-"
                 )
             }
@@ -195,6 +203,27 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         sections.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let section = sections[indexPath.section]
+        switch section {
+        case .newReleases(viewModels: let viewModels):
+            let playlist = playlists[indexPath.row]
+            let vc = PlaylistViewController(playlist: playlist)
+            vc.navigationItem.largeTitleDisplayMode = .never
+            navigationController?.pushViewController(vc, animated: true)
+            break
+        case .featuredPlaylists(viewModels: let viewModels):
+            let album = newAlbums[indexPath.row]
+            let vc = AlbumViewController(album: album)
+            vc.navigationItem.largeTitleDisplayMode = .never
+            navigationController?.pushViewController(vc, animated: true)
+            break
+        case .recommendedTracks(viewModels: let viewModels):
+            break
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
