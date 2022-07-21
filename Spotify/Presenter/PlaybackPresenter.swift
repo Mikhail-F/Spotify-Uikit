@@ -8,17 +8,20 @@
 import UIKit
 
 final class PlaybackPresenter {
-    static func startPlayback(from viewController: UIViewController, track: AudioTrack) {
+    
+    static let shared = PlaybackPresenter()
+    
+    func startPlayback(from viewController: UIViewController, track: AudioTrack) {
         let vc = PlayerViewController()
-        viewController.present(vc, animated: true)
+        vc.title = track.name
+        vc.navigationItem.largeTitleDisplayMode = .never
+        viewController.present(UINavigationController(rootViewController: vc), animated: true)
     }
     
-    static func startPlayback(from viewController: UIViewController, album: Album) {
-        
-    }
-    
-    static func startPlayback(from viewController: UIViewController, playlist: Playlist) {
+    func startPlayback(from viewController: UIViewController, tracks: [AudioTrack]) {
         let vc = PlayerViewController()
-        viewController.present(vc, animated: true)
+        vc.title = "Tracks"
+        vc.navigationItem.largeTitleDisplayMode = .never
+        viewController.present(UINavigationController(rootViewController: vc), animated: true)
     }
 }
