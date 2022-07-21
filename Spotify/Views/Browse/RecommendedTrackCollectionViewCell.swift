@@ -54,16 +54,16 @@ class RecommendedTrackCollectionViewCell: UICollectionViewCell {
             width: imageSize,
             height: imageSize
         )
-        artistNameLabel.frame = CGRect(
-            x: recommendedTrackCoverImageView.width + 20,
-            y: contentView.heigth - 25,
-            width: contentView.width - 6,
-            height: contentView.heigth / 2
-        )
         recommendedTrackNameLabel.frame = CGRect(
             x: recommendedTrackCoverImageView.width + 20,
-            y: contentView.heigth - 55,
-            width: contentView.width  - 6,
+            y: 0,
+            width: contentView.width - 20,
+            height: contentView.heigth / 2
+        )
+        artistNameLabel.frame = CGRect(
+            x: recommendedTrackCoverImageView.width + 20,
+            y: recommendedTrackNameLabel.bottom,
+            width: contentView.width - 20,
             height: contentView.heigth / 2
         )
     }

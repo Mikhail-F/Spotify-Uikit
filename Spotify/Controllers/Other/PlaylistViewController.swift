@@ -160,6 +160,7 @@ extension PlaylistViewController: UICollectionViewDelegate, UICollectionViewData
 
 extension PlaylistViewController: PlaylistHeaderCollectionReusableViewDelegate {
     func playlistHeaderCollectionReusableViewDidTapPlayAll(_ header: PlaylistHeaderCollectionReusableView) {
-        print("Playing all")
+        print("Playing all playlist")
+        PlaybackPresenter.startPlayback(from: self, playlist: playlist)
     }
 }

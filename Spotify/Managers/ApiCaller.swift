@@ -132,7 +132,7 @@ final class ApiCaller {
     
     public func getRecomendations(genres: Set<String>, completion: @escaping(Result<RecommendationsResponse, Error>) -> Void) {
         let seeds = genres.joined(separator: ",")
-        createRequest(with: URL(string: Constans.baseAPIURL + "/recommendations?limit=2&seed_genres=\(seeds)"), type: .GET, completion: { request in
+        createRequest(with: URL(string: Constans.baseAPIURL + "/recommendations?seed_genres=\(seeds)"), type: .GET, completion: { request in
             URLSession.shared.dataTask(with: request) { data, _, error in
                 guard let data = data, error == nil else {
                     completion(.failure(APIError.failedToGetData))
@@ -216,7 +216,37 @@ final class ApiCaller {
         }
     }
     
-    // MARK: - private
+    // MARK: - Search
+    
+    public func search(with query: String, completion: @escaping(Result<[SearchResult], Error>) -> Void) {
+        createRequest(with: URL(string: Constans.baseAPIURL + "/search?limit=10&type=album,artist,playlist,track&q=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"), type: .GET){ request in
+            URLSession.shared.dataTask(with: request) { data, _, error in
+                guard let data = data, error == nil else {
+                    completion(.failure(APIError.failedToGetData))
+                    return
+                }
+                
+                do {
+//                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+//                    print(json)
+                    let result = try JSONDecoder().decode(SearchResultsResponse.self, from: data)
+                    var searchResults = [SearchResult]()
+                    
+                    searchResults.append(contentsOf: result.tracks.items.compactMap({.track(model: $0)}))
+                    searchResults.append(contentsOf: result.albums.items.compactMap({.album(model: $0)}))
+                    searchResults.append(contentsOf: result.artists.items.compactMap({.artist(model: $0)}))
+                    searchResults.append(contentsOf: result.playlists.items.compactMap({.playlist(model: $0)}))
+                    
+                    completion(.success(searchResults))
+                } catch {
+                    print(error.localizedDescription)
+                    completion(.failure(error))
+                }
+            }.resume()
+        }
+    }
+    
+    // MARK: - Private
     
     enum HTTPMethod: String {
         case GET

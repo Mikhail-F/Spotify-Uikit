@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import SafariServices
 
-class SearchViewController: UIViewController, UISearchResultsUpdating {
+class SearchViewController: UIViewController, UISearchResultsUpdating, UISearchBarDelegate {
     private let searchController: UISearchController = {
         let vc = UISearchController(searchResultsController: SearchResultsViewController())
         vc.searchBar.placeholder = "Songs, Artists, Albums"
@@ -53,6 +54,7 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
         searchController.searchResultsUpdater = self
         collectionView.delegate = self
         collectionView.dataSource = self
+        searchController.searchBar.delegate = self
         collectionView.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: CategoryCollectionViewCell.identifier)
         view.addSubview(collectionView)
         navigationItem.searchController = searchController
@@ -71,17 +73,32 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
         }
     }
     
+    // Нативная функция
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let resultsController = searchController.searchResultsController as? SearchResultsViewController,
+              let query = searchBar.text, !query.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return
+        }
+        resultsController.delegate = self
+        ApiCaller.shared.search(with: query) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let value):
+                    resultsController.update(with: value)
+                case .failure(let error):
+                    break
+                }
+            }
+        }
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.frame = view.bounds
     }
     
     func updateSearchResults(for searchController: UISearchController) {
-        guard let resultsController = searchController.searchResultsController as? SearchResultsViewController,
-              let query = searchController.searchBar.text, !query.trimmingCharacters(in: .whitespaces).isEmpty else {
-            return
-        }
-        print(query)
+
     }
 }
 
@@ -108,5 +125,29 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let vc = CategoryViewController(category: category)
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+extension SearchViewController: SearchResultsViewControllerDelegate{
+    func didTapResult(_ result: SearchResult) {
+        switch result {
+        case .artist(model: let model):
+            guard let url = URL(string: model.external_urls["spotify"] ?? "") else {
+                return
+            }
+            let vc = SFSafariViewController(url: url)
+            present(vc, animated: true)
+        case .album(model: let model):
+            let vc = AlbumViewController(album: model)
+            vc.navigationItem.largeTitleDisplayMode = .never
+            navigationController?.pushViewController(vc, animated: true)
+        case .playlist(model: let model):
+            let vc = PlaylistViewController(playlist: model)
+            vc.navigationItem.largeTitleDisplayMode = .never
+            navigationController?.pushViewController(vc, animated: true)
+        case .track(model: let model):
+            break
+        }
+   
     }
 }

@@ -221,21 +221,19 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         collectionView.deselectItem(at: indexPath, animated: true)
         let section = sections[indexPath.section]
         switch section {
-        case .newReleases(viewModels: let viewModels):
+        case .newReleases:
             let album = newAlbums[indexPath.row]
             let vc = AlbumViewController(album: album)
             vc.navigationItem.largeTitleDisplayMode = .never
             navigationController?.pushViewController(vc, animated: true)
-            break
-        case .featuredPlaylists(viewModels: let viewModels):
+        case .featuredPlaylists:
             let playlist = playlists[indexPath.row]
             let vc = PlaylistViewController(playlist: playlist)
             vc.navigationItem.largeTitleDisplayMode = .never
             navigationController?.pushViewController(vc, animated: true)
-            break
-          
-        case .recommendedTracks(viewModels: let viewModels):
-            break
+        case .recommendedTracks:
+            let track = tracks[indexPath.row]
+            PlaybackPresenter.startPlayback(from: self, track: track)
         }
     }
     
@@ -370,7 +368,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             let group = NSCollectionLayoutGroup.vertical(
                 layoutSize: NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(60)
+                    heightDimension: .absolute(70)
                 ),
                 subitem: item,
                 count: 1
