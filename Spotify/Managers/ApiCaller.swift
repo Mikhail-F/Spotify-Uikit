@@ -77,7 +77,6 @@ final class ApiCaller {
                 do{
 //                    let result = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
                     let result = try JSONDecoder().decode(UserProfile.self, from: data)
-                    print(1)
                     comletion(.success(result))
                 } catch {
                     print(error.localizedDescription)

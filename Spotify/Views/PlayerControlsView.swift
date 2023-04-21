@@ -10,8 +10,8 @@ import UIKit
 
 
 struct PlayerControlsViewViewModel {
-    let title: String
-    let subtitle: String
+    let title: String?
+    let subtitle: String?
 }
 
 class PlayerControlsView: UIView {

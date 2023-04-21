@@ -48,6 +48,7 @@ class PlayerViewController: UIViewController {
     
     func configure() {
         imageView.sd_setImage(with: dataSource?.imageURL)
+        controlsView.configure(PlayerControlsViewViewModel(title: dataSource?.songName, subtitle: dataSource?.subtitle))
     }
     
     func configureBarButtons() {
@@ -61,6 +62,10 @@ class PlayerViewController: UIViewController {
     
     @objc private func didTapAction() {
         
+    }
+    
+    func refreshUI() {
+        configure()
     }
 }
 
